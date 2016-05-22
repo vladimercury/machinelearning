@@ -1,38 +1,41 @@
-class FrenchTextTiling:
+class FrenchTextTiling:  # Класс для определения косинусной близости абзацев текста
     def __init__(self):
+        # Инициализация
         from nltk.corpus import stopwords
         from nltk.stem.snowball import SnowballStemmer
         from sklearn.feature_extraction.text import TfidfVectorizer
-        # Инициализация
-        self.lang = 'french'
-        self.words = stopwords.words(self.lang) + ['fig', 'a', 'f']
-        self.stemmer = SnowballStemmer(self.lang)
-        self.vectorizer = TfidfVectorizer(min_df=0.1)
+        self.lang = 'french'  # Язык
+        self.words = stopwords.words(self.lang) + ['fig', 'a', 'f']  # Стоп-слова (союзы, предлоги)
+        self.stemmer = SnowballStemmer(self.lang)  # Класс, выделяющий основные части слов
+        self.vectorizer = TfidfVectorizer(min_df=0.1)  # Класс для построения TF-IDF матрицы
 
-    def _get_stemmed_tokens(self, paragraph):
+    def _get_modified_tokens(self, paragraph):
+        # Возвращает слова из абзаца в нижнем регистре, без пунктуации, чисел и стоп-слов
         from string import punctuation, digits
         from nltk import word_tokenize
-        # Возвращает слова из абзаца в нижнем регистре, без пунктуации, чисел и стоп-слов
-        lower_case = paragraph.lower()
-        no_punctuation = lower_case.translate(str.maketrans(punctuation, " " * len(punctuation)))
-        no_digits = no_punctuation.translate(str.maketrans(digits, " " * len(digits)))
-        tokens = word_tokenize(no_digits)
-        return [self.stemmer.stem(x) for x in tokens if x not in self.words]
+        lower_case = paragraph.lower()  # Преобразование в нижний регистр
+        no_punctuation = lower_case.translate(str.maketrans(punctuation, " " * len(punctuation)))  # Удаление знаков
+        no_digits = no_punctuation.translate(str.maketrans(digits, " " * len(digits)))  # Удаление цифр
+        tokens = word_tokenize(no_digits)  # Разбиение на слова
+        result = [self.stemmer.stem(x) for x in tokens if x not in self.words]  # Выделение основных частей слов
+        return result
 
     def _get_modified_text(self, text):
-        # Возвращает модифицированные абзацы
+        # Возвращает модифицированный текст
         modified_text = []
         for line in text:
-            tokens = self._get_stemmed_tokens(line)
+            tokens = self._get_modified_tokens(line)  # Получение модифицированных слов
             new_line = ""
             for token in tokens:
-                new_line += token + " "
-            modified_text.append(new_line)
+                new_line += token + " "  # Сборка массива слов обратно в строку
+            modified_text.append(new_line)  # Добавление очередной строки в массив
         return modified_text
 
     def get_cosine_similarity(self, text):
+        # Возвращает матрицу косинусной близости
         from sklearn.metrics.pairwise import cosine_similarity
-        # Возвращает матрицу связей
-        modified_text = self._get_modified_text(text)
-        matrix = self.vectorizer.fit_transform(modified_text)
-        return cosine_similarity(matrix)
+        modified_text = self._get_modified_text(text)  # Получение модифицированного текста
+        matrix = self.vectorizer.fit_transform(modified_text)  # Получение TF-IDF матрицы
+        cosine = cosine_similarity(matrix)  # Получение матрицы косинусной близости
+        return cosine
+    
