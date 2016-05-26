@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plot
+
 class Drawer:  # Класс для рисования диаграмм
     @staticmethod
     def draw_dendrogramm(linkage_matrix, output_file, range_start=1, plot_title="Dendrogramm"):
@@ -13,12 +15,35 @@ class Drawer:  # Класс для рисования диаграмм
         plot.close()
 
     @staticmethod
-    def draw_bar_graph(hist_data, output_file, range_start=1, plot_title="Bar graph"):
+    def draw_bar_graph(hist_data, range_start=1, step=3, width=0.8, color='blue', drawxticks=True):
         # Нарисовать столбчатую диаграмму
-        import matplotlib.pyplot as plot
-        plot.title(plot_title)  # Заголовок
-        labels = range(range_start, range_start + len(hist_data))  # Создание подписей столбцов
-        plot.bar(labels, hist_data)  # Создание диаграммы
-        plot.tight_layout()  # Обрезаются белые поля
-        plot.savefig(output_file, dpi=200)  # Запись в файл
+        min = range_start
+        max = range_start + len(hist_data)
+        plot.bar(range(min, max), hist_data, width=width, color=color)  # Создание диаграммы
+        if drawxticks:
+            plot.xticks(range(min, max, step))  # Подписи столбцов с определенным шагом
+
+    @staticmethod
+    def draw_hline(length, height, start=1, color='black', linewidth=0.5):
+        xval = range(start, start + length)
+        yval = [height] * len(xval)
+        plot.plot(xval, yval, color=color, linewidth=linewidth)
+
+    @staticmethod
+    def reset():
+        # Очистка графика
         plot.close()
+
+    @staticmethod
+    def save(file_name, dpi=200):
+        # Сохранение в файл
+        plot.tight_layout()
+        plot.savefig(file_name, dpi=dpi)
+
+    @staticmethod
+    def set_labels(title, xlabel, ylabel):
+        # Подпись диаграммы и осей
+        plot.title(title)
+        plot.xlabel(xlabel)
+        plot.ylabel(ylabel)
+

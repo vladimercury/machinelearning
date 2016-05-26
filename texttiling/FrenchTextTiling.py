@@ -38,4 +38,3 @@ class FrenchTextTiling:  # Класс для определения косину
         matrix = self.vectorizer.fit_transform(modified_text)  # Получение TF-IDF матрицы
         cosine = cosine_similarity(matrix)  # Получение матрицы косинусной близости
         return cosine
-    

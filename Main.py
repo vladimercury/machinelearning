@@ -9,7 +9,6 @@ task = TaskReader.read("text.txt")  # Чтение задания из файл�
 # Segmentation
 similarity = FrenchTextTiling().get_cosine_similarity(task.text)  # Получение матрицы косинусной близости
 cosines = [similarity[i][i+1] for i in range(0, len(similarity) - 1)]  # Получение массива косинусных близостей для соседних абзацев
-Drawer.draw_bar_graph(cosines, "Segmentation.png", 244, "Segmentation")  # Создание диаграммы
 
 # Clustering
 distances = 1 - similarity  # Получение матрицы расстояний
