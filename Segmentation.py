@@ -1,8 +1,8 @@
-from util.TaskReader import TaskReader
-from util.Drawer import Drawer
-from texttiling.FrenchTextTiling import FrenchTextTiling
-from math import ceil
 from numpy import arange
+
+from util.Drawer import Drawer
+from util.TextSimilarity import TextSimilarity
+from util.TaskReader import TaskReader
 
 
 def recall_precision(cos, bound_val, max_val, expert):
@@ -29,7 +29,7 @@ def recall_precision(cos, bound_val, max_val, expert):
 
 
 task = TaskReader.read("text.txt")
-similarity = FrenchTextTiling().get_cosine_similarity(task.text)
+similarity = TextSimilarity('french').get_cosine_similarity(task.text)
 cosines = [similarity[i][i+1] for i in range(0, len(similarity) - 1)]
 
 expert_bounds = []

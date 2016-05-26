@@ -1,11 +1,11 @@
-class FrenchTextTiling:  # Класс для определения косинусной близости абзацев текста
-    def __init__(self):
+class TextSimilarity:  # Класс для определения косинусной близости абзацев текста
+    def __init__(self, lang):
         # Инициализация
         from nltk.corpus import stopwords
         from nltk.stem.snowball import SnowballStemmer
         from sklearn.feature_extraction.text import TfidfVectorizer
-        self.lang = 'french'  # Язык
-        self.words = stopwords.words(self.lang) + ['fig', 'a', 'f']  # Стоп-слова (союзы, предлоги)
+        self.lang = lang  # Язык
+        self.words = stopwords.words(self.lang) # Стоп-слова (союзы, предлоги)
         self.stemmer = SnowballStemmer(self.lang)  # Класс, выделяющий основные части слов
         self.vectorizer = TfidfVectorizer(min_df=0.1)  # Класс для построения TF-IDF матрицы
 
