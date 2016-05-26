@@ -17,12 +17,12 @@ def recall_precision(cos, bound_val, max_val, expert):
         if bounds[i] == expert[i] and bounds[i] != 0:
             tp += 1
         elif bounds[i] == expert[i] and bounds[i] == 0:
-            fn += 1
+            tn += 1
         elif bounds[i] != expert[i] and bounds[i] != 0:
             fp += 1
         elif bounds[i] != expert[i] and bounds[i] == 0:
-            tn += 1
-    recall = tp / (tp + tn)
+            fn += 1
+    recall = tp / (tp + fn)
     precision = tp / (tp + fp)
     F = 2 * precision * recall / (precision + recall)
     return F, recall, precision, tp, fn, fp, tn, bounds
