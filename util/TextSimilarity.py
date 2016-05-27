@@ -20,7 +20,7 @@ class TextSimilarity:  # Класс для определения косинус
         result = [self.stemmer.stem(x) for x in tokens if x not in self.words]  # Выделение основных частей слов
         return result
 
-    def _get_modified_text(self, text):
+    def get_modified_text(self, text):
         # Возвращает модифицированный текст
         modified_text = []
         for line in text:
@@ -34,7 +34,7 @@ class TextSimilarity:  # Класс для определения косинус
     def get_cosine_similarity(self, text):
         # Возвращает матрицу косинусной близости
         from sklearn.metrics.pairwise import cosine_similarity
-        modified_text = self._get_modified_text(text)  # Получение модифицированного текста
+        modified_text = self.get_modified_text(text)  # Получение модифицированного текста
         matrix = self.vectorizer.fit_transform(modified_text)  # Получение TF-IDF матрицы
         cosine = cosine_similarity(matrix)  # Получение матрицы косинусной близости
         return cosine
