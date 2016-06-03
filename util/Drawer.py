@@ -16,9 +16,9 @@ class Drawer:  # Класс для рисования диаграмм
         # Нарисовать столбчатую диаграмму
         min = range_start
         max = range_start + len(hist_data)
-        plot.bar(range(min, max), hist_data, width=width, color=color)  # Создание диаграммы
         if drawxticks:
             plot.xticks(range(min, max, step))  # Подписи столбцов с определенным шагом
+        plot.bar(range(min, max), hist_data, width=width, color=color)  # Создание диаграммы
 
     @staticmethod
     def draw_hline(length, height, start=1, color='black', linewidth=0.5):

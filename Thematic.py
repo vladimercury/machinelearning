@@ -6,15 +6,25 @@ from gensim.models.ldamodel import LdaModel
 
 print("LDA Output: ")
 
+first_num = 244
+
 task = TaskReader.read("text.txt")
 similarity = TextSimilarity('french')
-text = similarity.get_modified_text(task.text)
-edu = similarity.get_modified_text(task.education)
-for i in range(0, len(text)):
-    num = i + 244
-    corp = [x for x in text[i].split()]
-    dict = [x for x in edu[i].split()]
+doc_set = similarity.get_modified_text(task.text)
+edu_set = similarity.get_modified_text(task.education)
+
+for i in range(0, len(doc_set)):
+    num = i + first_num
+    corp = [x for x in doc_set[i].split()]
+    dict = [x for x in edu_set[i].split()]
     dictionary = Dictionary([dict])
     corpus = [dictionary.doc2bow(corp)]
-    ldamodel = LdaModel(corpus, num_topics=1, id2word=dictionary, passes=20)
-    [print(str(num) + " : " + x[1]) for x in ldamodel.print_topics(num_topics=1, num_words=6)]
+    ldamodel = LdaModel(corpus, num_topics=1, id2word=dictionary, passes=50)
+    [print("Topic № " + str(num) + " : " + x[1]) for x in ldamodel.print_topics(num_topics=1, num_words=6)]
+
+# texts = [[x for x in i.split()] for i in doc_set]
+# edus = [[x for x in i.split()] for i in edu_set]
+# dictionary = Dictionary(edus)
+# corpus = [dictionary.doc2bow(text) for text in texts]
+# ldamodel = LdaModel(corpus, num_topics=len(texts), id2word=dictionary, passes=50)
+# [print(str(x[0] + first_num) + " : " + x[1]) for x in ldamodel.print_topics(num_topics=len(texts), num_words=6)]
