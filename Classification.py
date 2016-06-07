@@ -130,15 +130,22 @@ class SVM:
 
 range_start = 244
 themes = {
-    "A": ([244], [248]),
-    "B": ([245], [290, 287]),
-    "C": ([267], [241]),
-    "D": ([292], [256]),
-    "E": ([278], [266]),
-    "F": ([277], [290])
+    "Фок":                  ([244, 251], [285, 286], [x for x in range(244, 254)]),
+    "Бизань":               ([254, 261], [285, 286], [x for x in range(254, 263)]),
+    "Блинд":                ([263, 265], [285], [x for x in range(263, 266)]),
+    "Паруса между мачтами": ([266, 267, 270], [285], [x for x in range(266, 272)]),
+    "Стаксели":             ([272, 277], [284], [x for x in range(272, 279)]),
+    "Парусность судов":     ([280, 283], [287], [x for x in range(279, 284)]),
+    "Снасти":               ([284], [281], [x for x in range(284, 286)]),
+    "Блоки":                ([287, 291], [280], [x for x in range(286, 293)])
           }
+themes = []
+z = [x for x in range(244, 280)] + [x for x in range(283, 293)]
+for i in range(0, len(z) - 1):
+    for j in range(i + 1, len(z)):
+        themes.append(([279, 280], [z[i], z[j]], [x for x in range(279, 284)]))
 svm = SVM('text.txt')
-for theme in themes:
+for theme in range(len(themes)):
     svm.reset()
     svm.plus([x - range_start for x in themes[theme][0]])
     svm.minus([x - range_start for x in themes[theme][1]])
@@ -153,8 +160,21 @@ for theme in themes:
     #out.write(''.join(["%s %f\n" % (j, svm.spisok[i].get(j)) for j in keys1 if svm.spisok[i].get(j) != 0.0]))
     #out.write(''.join(['='] * 50) + '\n')
     #out.write(''.join(["%s %f\n" % (keys[j], svm.w[j]) for j in range(len(keys)) if svm.w[j] != 0.0]))
-    print(''.join(["="] * 30) + " " + theme + " " + ''.join(["="] * 30))
-    print(''.join(["%3d " % i for i in range(range_start, range_start + len(svm.c))]))
-    print(''.join(["%3d " % svm.c[i] for i in range(len(svm.c))]))
+    tsk = [x for x in svm.c]
     svm.finish()
-    print(''.join(["%3d " % svm.c[i] for i in range(len(svm.c))]))
+    expert = [-1] * len(svm.c)
+    for i in themes[theme][2]:
+        expert[i - range_start] = 1
+    diff = [expert[i] - svm.c[i] for i in range(len(expert))]
+    diff_view = ['X' if diff[i] != 0 else ' ' for i in range(len(diff))]
+    res = sum([1 if diff[i] != 0 else 0 for i in range(len(diff))])
+    expert_diff = sum([1 if tsk[i] != 0 and tsk[i] != svm.c[i] else 0 for i in range(len(tsk))])
+    if expert_diff < 3 and res < 5:
+        print(''.join(["="] * 30) + " " + str(theme) + " " + ''.join(["="] * 30))
+        print(''.join(["%3d " % i for i in range(range_start, range_start + len(svm.c))]))
+        print(''.join(["%3d " % tsk[i] for i in range(len(tsk))]))
+        print(''.join(["%3d " % svm.c[i] for i in range(len(svm.c))]))
+        print(''.join(["%3d " % expert[i] for i in range(len(expert))]))
+        print(''.join(["%3s " % diff_view[i] for i in range(len(diff_view))]))
+    else:
+        print(str(theme) + "/" + str(len(themes)))
