@@ -13,18 +13,10 @@ similarity = TextSimilarity('french')
 doc_set = similarity.get_modified_text(task.text)
 edu_set = similarity.get_modified_text(task.education)
 
+dictionary = Dictionary([[x for x in i.split()] for i in edu_set])
 for i in range(0, len(doc_set)):
     num = i + first_num
     corp = [x for x in doc_set[i].split()]
-    dict = [x for x in edu_set[i].split()]
-    dictionary = Dictionary([dict])
     corpus = [dictionary.doc2bow(corp)]
     ldamodel = LdaModel(corpus, num_topics=1, id2word=dictionary, passes=50)
     [print("Topic № " + str(num) + " : " + x[1]) for x in ldamodel.print_topics(num_topics=1, num_words=6)]
-
-# texts = [[x for x in i.split()] for i in doc_set]
-# edus = [[x for x in i.split()] for i in edu_set]
-# dictionary = Dictionary(edus)
-# corpus = [dictionary.doc2bow(text) for text in texts]
-# ldamodel = LdaModel(corpus, num_topics=len(texts), id2word=dictionary, passes=50)
-# [print(str(x[0] + first_num) + " : " + x[1]) for x in ldamodel.print_topics(num_topics=len(texts), num_words=6)]

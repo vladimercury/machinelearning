@@ -27,6 +27,11 @@ class Drawer:  # Класс для рисования диаграмм
         plot.plot(xval, yval, color=color, linewidth=linewidth)
 
     @staticmethod
+    def show():
+        # Показ графика
+        plot.show()
+
+    @staticmethod
     def reset():
         # Очистка графика
         plot.close()
